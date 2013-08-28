@@ -184,12 +184,6 @@ class XmlParser {
     }
 
     if (_peek().name.contains(':')){
-      var ns = _peek().name.split(':')[0];
-
-      if (!_peek().isNamespaceInScope(ns)){
-        throw new XmlException.withDebug('Namespace "${ns}" is'
-          ' not declared in scope.', _xml, next._location);
-      }
       next = t.next();
     }
 
@@ -203,9 +197,11 @@ class XmlParser {
           _parseAttribute(t, next._str);
           break;
         case XmlToken.GT:
+          _assertNamespacesAreInScope(newElement, next);
           _parseElement(t);
           return;
         case XmlToken.SLASH:
+          _assertNamespacesAreInScope(newElement, next);
           next = t.next();
           _assertKind(next, XmlToken.GT);
           _pop();
@@ -221,6 +217,17 @@ class XmlParser {
 
       if (next == null){
         throw new Exception('Unexpected end of file.');
+      }
+    }
+  }
+
+  void _assertNamespacesAreInScope(XmlElement element, XmlToken token) {
+    if (element.name.contains(":")) {
+      var ns = element.name.split(':').first;
+
+      if (!element.isNamespaceInScope(ns)){
+        throw new XmlException.withDebug('Namespace "${ns}" is'
+        ' not declared in scope.', _xml, token._location);
       }
     }
   }
