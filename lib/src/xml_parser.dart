@@ -12,13 +12,13 @@ class XmlParser {
   final bool _withQuirks;
   XmlElement _root;
 
-  static XmlElement _parse(String xml, [withQuirks = false])  {
+  static XmlElement _parse(String xml, {withQuirks: false, ignoreWhitespace: true})  {
     if (xml.isEmpty){
       throw const XmlException('Nothing to parse.');
     }
     XmlParser p = new XmlParser._internal(xml, withQuirks);
 
-    final XmlTokenizer t = new XmlTokenizer(p._xml);
+    final XmlTokenizer t = new XmlTokenizer(p._xml, ignoreWhitespace: ignoreWhitespace);
 
     p._parseElement(t);
 
@@ -376,7 +376,6 @@ class XmlParser {
        index: t.lastTokenIndex);
 
       if (!el.isNamespaceInScope(attributeName) && result == false){
-        print('$result $attributeName');
         throw new XmlException.withDebug('xxNamespace "$attributeName" is'
           ' not declared in scope.', _xml, next._location);
       }

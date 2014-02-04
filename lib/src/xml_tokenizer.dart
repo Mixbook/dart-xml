@@ -37,11 +37,14 @@ class XmlTokenizer {
   int _index = -1;
   bool _isInTag = false;
 
+  bool _ignoreWhitespace;
+
   int get lastTokenIndex => _index;
 
-  XmlTokenizer(this._xml)
+  XmlTokenizer(this._xml, {bool ignoreWhitespace: true})
   {
     _length = _xml.length;
+    _ignoreWhitespace = ignoreWhitespace;
 
     var t = _next();
     while(t != null){
@@ -208,7 +211,7 @@ class XmlTokenizer {
     // Peel off and return a token if there are any in the queue.
     if (!_buffer.isEmpty) return getNextToken();
 
-    while(_i < _length && isWhitespace(_xml.codeUnitAt(_i)))
+    while((_isInTag || _ignoreWhitespace) && _i < _length && isWhitespace(_xml.codeUnitAt(_i)))
       {
         _i++;
       }
@@ -378,7 +381,10 @@ class XmlTokenizer {
             s.write(_xml.substring(_i, _i + 1));
             _i++;
           }
-          addToQueue(new XmlToken.string(s.toString().trim()));
+
+          // Only trim non-text nodes and when ignore whitespace is set.
+          var text = _isInTag || _ignoreWhitespace ? s.toString().trim() : s.toString();
+          addToQueue(new XmlToken.string(text));
         }
         break;
     }

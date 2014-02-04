@@ -30,8 +30,8 @@ class XML {
   *
   * * Optional quotes for simple attribute values (no spaces).
   */
-  static XmlElement parse(String xml, [withQuirks = false]) =>
-      XmlParser._parse(xml.trim(), withQuirks);
+  static XmlElement parse(String xml, {withQuirks: false, ignoreWhitespace: true}) =>
+      XmlParser._parse(xml.trim(), withQuirks: withQuirks, ignoreWhitespace: ignoreWhitespace);
 
   /**
   * Returns a stringified version of an [XmlElement] tree.

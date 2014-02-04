@@ -24,6 +24,16 @@ parserTests(){
       expect(str1, equals(str2));
     });
 
+    test('ignore whitespace for text nodes', () {
+      var parsed = XML.parse("<foo> bar  </foo>");
+      expect(parsed.text, equals("bar"));
+    });
+
+    test('preserve whitespace for text nodes', () {
+      var parsed = XML.parse("<foo> bar  </foo>", ignoreWhitespace: false);
+      expect(parsed.text, equals(" bar  "));
+    });
+
     test('minimal OK', (){
       var result = XML.parse('<foo></foo>');
       expect(result, new isInstanceOf<XmlElement>());
@@ -73,7 +83,7 @@ parserTests(){
     });
 
     test('attribute no quotes OK when in quirks mode', (){
-        var result = XML.parse('<foo bar=bloo></foo>', true);
+        var result = XML.parse('<foo bar=bloo></foo>', withQuirks: true);
         expect('bloo', equals(result.attributes['bar']));
     });
 
