@@ -265,6 +265,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
     _collection.fillRange(start, length, fill);
   }
 
+  void shuffle([Random random]) => _collection.shuffle(random);
 
   // From [Collection].
 
@@ -750,7 +751,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
       return;
     }else{
       if ((node as XmlElement).hasChildren){
-        node.children
+        (node as XmlElement).children
           .forEach((el){
             if (!list.isEmpty) return;
             if (el is XmlElement){
@@ -852,7 +853,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
       list.add(node);
     }else{
       if ((node as XmlElement).hasChildren){
-        node.children
+        (node as XmlElement).children
           .forEach((el){
             if (el is XmlElement){
               el._queryAllNodeTypesInternal(nodeType, list);
