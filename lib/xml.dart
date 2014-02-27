@@ -4,6 +4,7 @@
 library xml_utils_prujohn;
 
 import 'dart:collection';
+import 'dart:math';
 
 part 'src/xml_element.dart';
 part 'src/xml_parser.dart';
